@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Know Your Personality - Fun Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+      background-image: url("https://i.pinimg.com/736x/8f/71/cf/8f71cfeb7c3c2925c0e3405d01d37d01.jpg");
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background:linear-gradient(to top,cyan,turquoise,rgb(10, 84, 87), rgb(20, 20, 90));
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #ffffff;
+    }
+    .question {
+      display: none;
+      animation: fade 0.5s ease-in-out;
+    }
+    .question.active {
+      display: block;
+    }
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    label {
+      display: block;
+      margin: 10px 0;
+      cursor: pointer;
+      color: #555;
+    }
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .next-btn {
+      background: #4CAF50;
+      color: white;
+    }
+    .prev-btn {
+      background: #ccc;
+    }
+    .progress-bar {
+      height: 10px;
+      background: #eee;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #4CAF50;
+      transition: width 0.3s;
+    }
+    .result {
+      display: none;
+      background: #e0ffe0;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+      font-size: 1.2rem;
+      color: #2e7d32;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Know Your Personality</h1>
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+    <form id="quizForm">
+     
+    </form>
+    <div class="buttons">
+      <button type="button" class="prev-btn" onclick="prevQuestion()">Previous</button>
+      <button type="button" class="next-btn" onclick="nextQuestion()">Next</button>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "If your thoughts had a background soundtrack, what would it sound like?",
+        a: [
+          "A cheerful tune that lifts your mood",
+          "A quiet, thoughtful instrumental",
+          "The sound of soft rain",
+          "Something loud and wild that keeps you excited"
+        ]
+      },
+      {
+        q: "Imagine you're stuck living the same day over and over again. What's your first move?",
+        a: [
+          "Accept it and make the most of every moment",
+          "Try to figure out what's causing it and how to break it",
+          "Use the loop to help others around you",
+          "Take advantage of it to try something crazy every day"
+        ]
+      },
+      {
+        q: "If you could bottle up one scent and wear it as your signature, what would it be?",
+        a: [
+          "The smell of fresh flowers in the morning",
+          "A smoky, spicy campfire aroma",
+          "Crisp citrus or something fresh and uplifting",
+          "Old books and ink from a cozy library"
+        ]
+      },
+      {
+        q: "If your social media feed showed your real life, what would people mostly see?",
+        a: [
+          "Positive quotes, sunshine, and good vibes",
+          "Deep thoughts, random facts, and long captions",
+          "Emotional posts, meaningful stories, and quiet reflections",
+          "Action shots, travel snaps, and spontaneous moments"
+        ]
+      },
+      {
+        q: "You crack open a fortune cookie and it says you'll meet someone unforgettable tomorrow. What’s your reaction?",
+        a: [
+          "Smile and feel excited for what’s coming",
+          "Wonder how likely that really is",
+          "Get a little emotional just thinking about it",
+          "Immediately plan something fun, just in case it’s true"
+        ]
+      },
+      {
+        q: "What kind of place feels most like home to you?",
+        a: [
+          "A cozy cottage surrounded by trees",
+          "A sleek, modern apartment filled with tech and books",
+          "A little house by the sea with soft music playing",
+          "A van or tent in the middle of nowhere, ready to move"
+        ]
+      },
+      {
+        q: "When you enter a room full of people, what do you notice first?",
+        a: [
+          "The overall energy or vibe",
+          "How the space is organized and who's doing what",
+          "Who seems happy or who might need a friend",
+          "Where the exits are and how fast you can explore"
+        ]
+      },
+      {
+        q: "Be honest—what type of chaos do you secretly enjoy?",
+        a: [
+          "Plans that change last minute and turn out better",
+          "Intense conversations that challenge your thinking",
+          "Messy feelings and complicated relationships (from a safe distance)",
+          "Surprises that shake up your day in a fun way"
+        ]
+      },
+      {
+        q: "What’s your comfort item when the day gets tough?",
+        a: [
+          "A warm drink and your favorite blanket",
+          "A book that makes you think or learn",
+          "A gift from someone who matters to you",
+          "A map, a backpack, or something that says 'let’s go'"
+        ]
+      },
+      {
+        q: "You wake up tomorrow as the best version of yourself. What’s the first thing you do?",
+        a: [
+          "Sit quietly, breathe deeply, and start the day with peace",
+          "Dive into a challenge or project you’ve been dreaming of",
+          "Call or message the person who matters most",
+          "Look up flights or activities and chase something new"
+        ]
+      }
+    ];
+
+    const form = document.getElementById('quizForm');
+    const resultDiv = document.getElementById('result');
+    const progressBar = document.getElementById('progress');
+    let currentQuestion = 0;
+
+    function renderQuestion() {
+      form.innerHTML = '';
+      const qObj = questions[currentQuestion];
+      const div = document.createElement('div');
+      div.classList.add('question', 'active');
+
+      const q = document.createElement('h3');
+      q.textContent = `Q${currentQuestion + 1}. ${qObj.q}`;
+      div.appendChild(q);
+
+      qObj.a.forEach((option, index) => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'q' + currentQuestion;
+        input.value = option;
+        label.appendChild(input);
+        label.append(option);
+        div.appendChild(label);
+      });
+
+      form.appendChild(div);
+      progressBar.style.width = ((currentQuestion + 1) / questions.length) * 100 + '%';
+    }
+
+    function nextQuestion() {
+      const selected = form.querySelector('input[name="q' + currentQuestion + '"]:checked');
+      if (!selected) return alert('Please select an option.');
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+      }
+    }
+
+    function showResult() {
+      form.style.display = 'none';
+      document.querySelector('.buttons').style.display = 'none';
+      resultDiv.style.display = 'block';
+
+      
+      let totalScore = 0;
+      for (let i = 0; i < questions.length; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected) {
+         
+          const answerIndex = questions[i].a.indexOf(selected.value);
+          totalScore += answerIndex;
+        }
+      }
+
+     
+      let personality = '';
+      if (totalScore <= 8) {
+        personality = "You are calm, thoughtful, and appreciate the simple joys in life.";
+      } else if (totalScore <= 16) {
+        personality = "You have a balanced personality – curious and practical in equal parts.";
+      } else if (totalScore <= 24) {
+        personality = "You are adventurous, energetic, and love to try new things.";
+      } else {
+        personality = "You’re a bold spirit, always seeking excitement and pushing boundaries.";
+      }
+
+      resultDiv.innerHTML = `<h2>Your Personality Result</h2><p>${personality}</p>`;
+      progressBar.style.width = '100%';
+    }
+
+    renderQuestion();
+  </script>
+  <footer>Created by Hazelllll</footer>
+</body>
+</html>
